@@ -11,19 +11,19 @@ import * as yup from "yup";
 import Alert from "@mui/material/Alert";
 
 const loginSchema = yup.object({
-  displayName: yup.string().required("* Required Field *"),
+  displayName: yup.string().required("* Required Field"),
   username: yup
     .string()
-    .required("* Required Field *")
+    .required("* Required Field")
     .min(8, "Must be atleast 8 characters")
     .matches(/^[A-Za-z0-9]*$/, "Only numbers or letters allowed"),
   email: yup
     .string()
     .email("Must be a valid email")
-    .required("* Required Field *"),
+    .required("* Required Field"),
   password: yup
     .string()
-    .required("* Required Field *")
+    .required("* Required Field")
     .min(6, "Must be atleast 6 characters"),
 });
 
@@ -45,20 +45,31 @@ export default function Signup(): ReactElement {
     registerUser(data)
       .unwrap()
       .then(({ token, user }) => {
+        console.log(token, user);
         dispatch(initUser(user));
         window.localStorage.setItem("token", token);
-        navigate("/");
+        navigate("/home");
       })
       .catch(({ data }) => {
         setApiError(data.error);
       });
   };
   return (
-    <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "2rem",
+        m: "0 auto",
+      }}
+    >
       {apiError && (
         <Alert severity="error">Username or Email already taken</Alert>
       )}
       <TextField
+        variant="filled"
         label="Display name"
         autoComplete="off"
         {...register("displayName")}
@@ -66,6 +77,7 @@ export default function Signup(): ReactElement {
         helperText={errors.displayName?.message}
       />
       <TextField
+        variant="filled"
         label="Username"
         autoComplete="off"
         {...register("username")}
@@ -73,6 +85,7 @@ export default function Signup(): ReactElement {
         helperText={errors.username?.message}
       />
       <TextField
+        variant="filled"
         label="Email"
         autoComplete="off"
         {...register("email")}
@@ -80,13 +93,17 @@ export default function Signup(): ReactElement {
         helperText={errors.email?.message}
       />
       <TextField
+        variant="filled"
         label="Password"
         autoComplete="off"
         {...register("password")}
         error={errors.password && true}
         helperText={errors.password?.message}
       />
-      <Button type="submit">Submit</Button>
+
+      <Button type="submit" variant="contained" fullWidth>
+        Create Account
+      </Button>
     </Box>
   );
 }

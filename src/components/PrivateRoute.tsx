@@ -9,7 +9,7 @@ export default function PrivateRoute({
   let location = useLocation();
 
   if (!localStorage.getItem("token")) {
-    return <Navigate to="auth/signup" state={{ from: location }} replace />;
+    return <Navigate to="/" state={{ from: location }} replace />;
   }
   return children;
 }

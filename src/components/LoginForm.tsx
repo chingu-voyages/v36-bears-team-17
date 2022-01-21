@@ -4,30 +4,44 @@ import { useFormHook } from "../utils/useFormHook";
 
 export default function Login(): ReactElement {
   const { formState, handleChange } = useFormHook({
-    text: "",
+    username: "",
     password: "",
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formState);
+
     // write logic for evaluting text and deciding if key is an email or username
   };
   return (
-    <Box component="form" onSubmit={handleSubmit}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "2rem",
+        m: "0 auto",
+      }}
+    >
       <TextField
+        variant="filled"
         label="Username or Email"
         onChange={handleChange}
-        value={formState.text}
-        name="text"
+        value={formState.username}
+        name="username"
       />
       <TextField
+        variant="filled"
         label="Password"
         onChange={handleChange}
         value={formState.password}
         name="password"
       />
-      <Button type="submit">Submit</Button>
+      <Button type="submit" variant="contained">
+        Login
+      </Button>
     </Box>
   );
 }
