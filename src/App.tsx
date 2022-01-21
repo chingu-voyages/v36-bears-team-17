@@ -1,5 +1,5 @@
-import Signup from "./components/Signup";
-import Login from "./components/Login";
+import Signup from "./components/SignUpForm";
+import Login from "./components/LoginForm";
 import UserRegistrationLayout from "./components/UserRegistrationLayout";
 import Dashboard from "./components/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
@@ -9,17 +9,19 @@ function App() {
   return (
     <>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route path="auth" element={<UserRegistrationLayout />}>
+        <Route element={<UserRegistrationLayout />}>
+          <Route path="/" element={<Signup />} />
           <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
+        </Route>
+        <Route>
+          <Route
+            path="home"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
         </Route>
       </Routes>
     </>
