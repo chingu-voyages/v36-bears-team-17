@@ -1,61 +1,106 @@
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { Box, TextField, Button } from "@mui/material";
 import { useUserRegistrationMutation } from "../store/apiSlice";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../app/hooks";
 import { initUser } from "../store/user/userSlice";
-import { useForm } from "../utils/useForm";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { signupField } from "../types/types";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import Alert from "@mui/material/Alert";
+
+const loginSchema = yup.object({
+  displayName: yup.string().required("* Required Field *"),
+  username: yup
+    .string()
+    .required("* Required Field *")
+    .min(8, "Must be atleast 8 characters")
+    .matches(/^[A-Za-z0-9]*$/, "Only numbers or letters allowed"),
+  email: yup
+    .string()
+    .email("Must be a valid email")
+    .required("* Required Field *"),
+  password: yup
+    .string()
+    .required("* Required Field *")
+    .min(6, "Must be atleast 6 characters"),
+});
 
 export default function Signup(): ReactElement {
   const [registerUser, result] = useUserRegistrationMutation();
-  const { formState, handleChange } = useForm({
-    displayName: "",
-    username: "",
-    email: "",
-    password: "",
-  });
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<signupField>({ resolver: yupResolver(loginSchema) });
+  const [apiError, setApiError] = useState("");
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    registerUser(formState)
+  const onSubmit: SubmitHandler<signupField> = (data) => {
+    setApiError("");
+
+    registerUser(data)
       .unwrap()
       .then(({ token, user }) => {
         dispatch(initUser(user));
         window.localStorage.setItem("token", token);
         navigate("/");
       })
-      .catch(({ data: { error } }) => {
-        console.log(error);
+      .catch(({ data }) => {
+        setApiError(data.error);
       });
   };
-
   return (
-    <Box component="form" onSubmit={handleSubmit}>
+    <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+      {apiError && (
+        <Alert severity="error">Username or Email already taken</Alert>
+      )}
       <TextField
         label="Display name"
-        onChange={handleChange}
-        value={formState.displayName}
-        name="displayName"
+        // onChange={handleChange}
+        // value={formState.displayName}
+        // name="displayName"
+        // type="text"
+        autoComplete="off"
+        {...register("displayName")}
+        error={errors.displayName && true}
+        helperText={errors.displayName?.message}
       />
       <TextField
         label="Username"
-        onChange={handleChange}
-        value={formState.username}
-        name="username"
+        // onChange={handleChange}
+        // value={formState.username}
+        // name="username"
+        // type="text"
+        autoComplete="off"
+        {...register("username")}
+        error={errors.username && true}
+        helperText={errors.username?.message}
       />
       <TextField
         label="Email"
-        onChange={handleChange}
-        value={formState.email}
-        name="email"
+        // onChange={handleChange}
+        // value={formState.email}
+        // name="email"
+        // type="email"
+        autoComplete="off"
+        {...register("email")}
+        error={errors.email && true}
+        helperText={errors.email?.message}
       />
       <TextField
         label="Password"
-        onChange={handleChange}
-        value={formState.password}
-        name="password"
+        // onChange={handleChange}
+        // value={formState.password}
+        // name="password"
+        // type="password"
+        autoComplete="off"
+        {...register("password")}
+        error={errors.password && true}
+        helperText={errors.password?.message}
       />
       <Button type="submit">Submit</Button>
     </Box>
