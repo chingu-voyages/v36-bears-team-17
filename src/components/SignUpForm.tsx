@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, Typography, Link } from "@mui/material";
 import { useUserRegistrationMutation } from "../store/apiSlice";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../app/hooks";
@@ -22,9 +22,10 @@ export default function Signup(): ReactElement {
     registerUser(formState)
       .unwrap()
       .then(({ token, user }) => {
+        console.log(token, user);
         dispatch(initUser(user));
         window.localStorage.setItem("token", token);
-        navigate("/");
+        navigate("/home");
       })
       .catch(({ data: { error } }) => {
         console.log(error);
@@ -32,32 +33,48 @@ export default function Signup(): ReactElement {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "2rem",
+        m: "0 auto",
+      }}
+    >
       <TextField
+        variant="filled"
         label="Display name"
         onChange={handleChange}
         value={formState.displayName}
         name="displayName"
       />
       <TextField
+        variant="filled"
         label="Username"
         onChange={handleChange}
         value={formState.username}
         name="username"
       />
       <TextField
+        variant="filled"
         label="Email"
         onChange={handleChange}
         value={formState.email}
         name="email"
       />
       <TextField
+        variant="filled"
         label="Password"
         onChange={handleChange}
         value={formState.password}
         name="password"
       />
-      <Button type="submit">Submit</Button>
+
+      <Button type="submit" variant="contained" fullWidth>
+        Create Account
+      </Button>
     </Box>
   );
 }
