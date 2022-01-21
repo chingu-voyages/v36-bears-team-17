@@ -1,9 +1,9 @@
 import React, { ReactElement } from "react";
 import { Box, TextField, Button } from "@mui/material";
-import { useForm } from "../utils/useForm";
+import { useFormHook } from "../utils/useFormHook";
 
 export default function Login(): ReactElement {
-  const { formState, handleChange } = useForm({
+  const { formState, handleChange } = useFormHook({
     text: "",
     password: "",
   });
