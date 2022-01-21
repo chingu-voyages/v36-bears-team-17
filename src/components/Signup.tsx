@@ -60,10 +60,6 @@ export default function Signup(): ReactElement {
       )}
       <TextField
         label="Display name"
-        // onChange={handleChange}
-        // value={formState.displayName}
-        // name="displayName"
-        // type="text"
         autoComplete="off"
         {...register("displayName")}
         error={errors.displayName && true}
@@ -71,10 +67,6 @@ export default function Signup(): ReactElement {
       />
       <TextField
         label="Username"
-        // onChange={handleChange}
-        // value={formState.username}
-        // name="username"
-        // type="text"
         autoComplete="off"
         {...register("username")}
         error={errors.username && true}
@@ -82,10 +74,6 @@ export default function Signup(): ReactElement {
       />
       <TextField
         label="Email"
-        // onChange={handleChange}
-        // value={formState.email}
-        // name="email"
-        // type="email"
         autoComplete="off"
         {...register("email")}
         error={errors.email && true}
@@ -93,10 +81,6 @@ export default function Signup(): ReactElement {
       />
       <TextField
         label="Password"
-        // onChange={handleChange}
-        // value={formState.password}
-        // name="password"
-        // type="password"
         autoComplete="off"
         {...register("password")}
         error={errors.password && true}
