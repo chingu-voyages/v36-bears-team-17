@@ -10,12 +10,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Alert from "@mui/material/Alert";
 
-const loginSchema = yup.object({
+const signUpSchema = yup.object({
   displayName: yup.string().required("* Required Field"),
   username: yup
     .string()
     .required("* Required Field")
     .min(8, "Must be atleast 8 characters")
+    .max(20, "Must be less than 20 characters")
     .matches(/^[A-Za-z0-9]*$/, "Only numbers or letters allowed"),
   email: yup
     .string()
@@ -33,19 +34,18 @@ export default function Signup(): ReactElement {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<signupField>({ resolver: yupResolver(loginSchema) });
+  } = useForm<signupField>({ resolver: yupResolver(signUpSchema) });
   const [apiError, setApiError] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const onSubmit: SubmitHandler<signupField> = (data) => {
+  const onSubmit: SubmitHandler<signupField> = (credentials) => {
     setApiError("");
 
-    registerUser(data)
+    registerUser(credentials)
       .unwrap()
       .then(({ token, user }) => {
-        console.log(token, user);
         dispatch(initUser(user));
         window.localStorage.setItem("token", token);
         navigate("/home");
@@ -54,6 +54,7 @@ export default function Signup(): ReactElement {
         setApiError(data.error);
       });
   };
+
   return (
     <Box
       component="form"
@@ -101,7 +102,7 @@ export default function Signup(): ReactElement {
         helperText={errors.password?.message}
       />
 
-      <Button type="submit" variant="contained" fullWidth>
+      <Button type="submit" variant="contained" fullWidth size="large">
         Create Account
       </Button>
     </Box>
