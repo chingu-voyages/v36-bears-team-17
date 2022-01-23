@@ -1,5 +1,5 @@
 import { ReactElement, useState } from "react";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, CircularProgress } from "@mui/material";
 import { useUserLoginMutation } from "../store/apiSlice";
 import { useAppDispatch } from "../app/hooks";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ const loginSchema = yup.object({
 });
 
 export default function Login(): ReactElement {
-  const [loginUser, result] = useUserLoginMutation();
+  const [loginUser, { isLoading }] = useUserLoginMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [apiError, setApiError] = useState("");
@@ -82,9 +82,29 @@ export default function Login(): ReactElement {
         error={errors.password && true}
         helperText={errors.password?.message}
       />
-      <Button type="submit" variant="contained" size="large">
-        Login
-      </Button>
+      <Box sx={{ position: "relative" }}>
+        <Button
+          fullWidth
+          type="submit"
+          variant="contained"
+          size="large"
+          disabled={isLoading}
+        >
+          Login
+        </Button>
+        {isLoading && (
+          <CircularProgress
+            size={30}
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              marginTop: "-12px",
+              marginLeft: "-12px",
+            }}
+          />
+        )}
+      </Box>
     </Box>
   );
 }
