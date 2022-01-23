@@ -1,5 +1,5 @@
 import { ReactElement, useState } from "react";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, CircularProgress } from "@mui/material";
 import { useUserRegistrationMutation } from "../store/apiSlice";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../app/hooks";
@@ -29,7 +29,7 @@ const signUpSchema = yup.object({
 });
 
 export default function Signup(): ReactElement {
-  const [registerUser, result] = useUserRegistrationMutation();
+  const [registerUser, { isLoading }] = useUserRegistrationMutation();
   const {
     register,
     formState: { errors },
@@ -102,9 +102,29 @@ export default function Signup(): ReactElement {
         helperText={errors.password?.message}
       />
 
-      <Button type="submit" variant="contained" fullWidth size="large">
-        Create Account
-      </Button>
+      <Box sx={{ position: "relative" }}>
+        <Button
+          fullWidth
+          type="submit"
+          variant="contained"
+          size="large"
+          disabled={isLoading}
+        >
+          Create Account
+        </Button>
+        {isLoading && (
+          <CircularProgress
+            size={30}
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              marginTop: "-12px",
+              marginLeft: "-12px",
+            }}
+          />
+        )}
+      </Box>
     </Box>
   );
 }
