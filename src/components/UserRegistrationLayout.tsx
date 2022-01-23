@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { Box, Typography, Link } from "@mui/material";
 import { Outlet, useLocation } from "react-router-dom";
 import PlaceholderImg from "../assets/images/placeholderImg.png";
@@ -29,6 +29,10 @@ export default function UserRegistrationLayout(): ReactElement {
   const [{ title, label, btnText, sendTo }] = useState<registrationType>(
     location.pathname === "/login" ? login : signup
   );
+
+  useEffect(() => {
+    localStorage.removeItem("token");
+  }, []);
 
   return (
     <Box sx={{ display: { lg: "flex" } }}>
