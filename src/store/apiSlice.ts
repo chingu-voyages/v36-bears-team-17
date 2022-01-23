@@ -9,7 +9,7 @@ import {
 export const apiSlice = createApi({
   reducerPath: "apiCall",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.BASE_URL || `http://localhost:5002/api`,
+    baseUrl: process.env.REACT_APP_BASE_URL,
     prepareHeaders: (headers) => {
       if (localStorage.getItem("token")) {
         headers.set("Authorization", `Bearer ${localStorage.getItem("token")}`);
@@ -21,7 +21,7 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     userRegistration: builder.mutation<registerResponse, signupField>({
       query: (userInput) => ({
-        url: "/auth/register",
+        url: "api/auth/register",
         method: "POST",
         body: userInput,
       }),
@@ -31,7 +31,7 @@ export const apiSlice = createApi({
       loginFieldWithEmail | loginFieldWithUsername
     >({
       query: (userInput) => ({
-        url: "/auth/login",
+        url: "api/auth/login",
         method: "POST",
         body: userInput,
       }),
