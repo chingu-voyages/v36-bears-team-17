@@ -6,9 +6,11 @@ import {
   TextField,
   Container,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
+import { useCreatePostMutation } from "../store/apiSlice";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -22,6 +24,7 @@ const postSchema = yup.object({
 export default function PostForm(): ReactElement {
   const [open, setOpen] = useState<boolean>(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const [createPost, { isLoading }] = useCreatePostMutation();
   const {
     register,
     watch,
@@ -45,6 +48,15 @@ export default function PostForm(): ReactElement {
 
   const onSubmit: SubmitHandler<postField> = (postData) => {
     console.log(postData);
+
+    createPost(postData)
+      .then((response) => {
+        console.log(response);
+        handleClose();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
@@ -177,22 +189,22 @@ export default function PostForm(): ReactElement {
               type="submit"
               variant="contained"
               size="large"
-              //   disabled={isLoading}
+              disabled={isLoading}
             >
               Submit Post
             </Button>
-            {/* {isLoading && (
-          <CircularProgress
-            size={30}
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              marginTop: "-12px",
-              marginLeft: "-12px",
-            }}
-          />
-        )} */}
+            {isLoading && (
+              <CircularProgress
+                size={30}
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: "-12px",
+                  marginLeft: "-12px",
+                }}
+              />
+            )}
           </Box>
         </Box>
       </Modal>
