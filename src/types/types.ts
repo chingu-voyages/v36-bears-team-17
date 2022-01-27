@@ -24,3 +24,23 @@ export interface loginFieldWithUsername {
   username: string;
   password: string;
 }
+
+export interface imageFile {
+  lastModified: number;
+  lastModifiedDate: Date;
+  name: string;
+  size: number;
+  type: string;
+  webkitRelativePath: string;
+}
+
+export interface imageFileList {
+  0: Blob | File | imageFile;
+  length: number;
+}
+
+export interface postField {
+  title: string;
+  description: string;
+  image?: undefined | object | imageFileList;
+}
