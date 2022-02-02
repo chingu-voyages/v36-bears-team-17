@@ -44,3 +44,19 @@ export interface postField {
   description: string;
   image?: undefined | object | imageFileList;
 }
+
+export interface postObj {
+  _id: string;
+  title: string;
+  description: string;
+  tags: never[];
+  user: {
+    _id: string;
+    displayName: string;
+    username: string;
+  };
+  comments: never[];
+  likes: never[];
+  createdAt: string;
+  __v: number;
+}
