@@ -4,6 +4,7 @@ import {
   registerResponse,
   loginFieldWithEmail,
   loginFieldWithUsername,
+  postField,
 } from "../types/types";
 
 export const apiSlice = createApi({
@@ -36,7 +37,18 @@ export const apiSlice = createApi({
         body: userInput,
       }),
     }),
+    createPost: builder.mutation<any, postField>({
+      query: (postInput) => ({
+        url: "api/post/",
+        method: "POST",
+        body: postInput,
+      }),
+    }),
   }),
 });
 
-export const { useUserRegistrationMutation, useUserLoginMutation } = apiSlice;
+export const {
+  useUserRegistrationMutation,
+  useUserLoginMutation,
+  useCreatePostMutation,
+} = apiSlice;
