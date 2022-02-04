@@ -7,7 +7,7 @@ export default function Logo(): ReactElement {
   return (
     <Box
       sx={{
-        m: "2rem 0",
+        p: "2rem 0",
         display: "flex",
         justifyContent: "center",
         cursor: "pointer",

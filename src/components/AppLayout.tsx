@@ -16,9 +16,15 @@ export default function AppLayout() {
         }}
       >
         <Toolbar />
-        <DesktopNavbar />
 
-        <Outlet />
+        <Grid container spacing={3} sx={{ p: { md: "0 1rem" } }}>
+          <Grid item md={"auto"} sx={{ display: { xs: "none", md: "block" } }}>
+            <DesktopNavbar />
+          </Grid>
+          <Grid item xs={12} md={"auto"}>
+            <Outlet />
+          </Grid>
+        </Grid>
       </Container>
     </Box>
   );

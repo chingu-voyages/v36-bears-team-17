@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { Typography, Box, Avatar, Button } from "@mui/material";
+import { Typography, Box, Avatar, Button, Paper } from "@mui/material";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -14,11 +14,11 @@ export default function PostCard({ post }: Props): ReactElement {
   const dateDiff = dayjs(post.createdAt).fromNow();
 
   return (
-    <Box
+    <Paper
+      elevation={2}
       sx={{
-        border: "1px solid red",
         p: "1.5rem",
-        maxWidth: "600px",
+        width: "100%",
         borderRadius: "5px",
       }}
     >
@@ -50,6 +50,6 @@ export default function PostCard({ post }: Props): ReactElement {
       <Button sx={{ m: "0.5rem 0 0 0" }} startIcon={<ChatBubbleOutlineIcon />}>
         Comments
       </Button>
-    </Box>
+    </Paper>
   );
 }
