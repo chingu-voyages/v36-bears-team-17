@@ -25,8 +25,8 @@ export default function Navbar() {
   }, [isDesktopMode]);
 
   return (
-    <>
-      <AppBar color="default" elevation={0}>
+    <nav>
+      <AppBar elevation={0} color="inherit">
         <Toolbar variant="dense">
           <Container
             maxWidth="md"
@@ -58,6 +58,6 @@ export default function Navbar() {
           <NavbarContent />
         </Box>
       </Drawer>
-    </>
+    </nav>
   );
 }
