@@ -7,6 +7,8 @@ import {
   Container,
   Typography,
   CircularProgress,
+  Divider,
+  Paper,
 } from "@mui/material";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
@@ -89,10 +91,7 @@ export default function PostForm(): ReactElement {
         Create Post
       </Button>
       <Modal open={open} onClose={handleClose}>
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          maxWidth="md"
+        <Paper
           sx={{
             position: "absolute",
             top: "50%",
@@ -100,113 +99,120 @@ export default function PostForm(): ReactElement {
             transform: "translate(-50%, -50%)",
             background: "white",
             width: "600px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "2rem",
-            m: "0 auto",
             p: "1rem",
+            boxSizing: "content-box",
           }}
         >
-          <TextField
-            variant="filled"
-            label="Title"
-            autoComplete="off"
-            {...register("title")}
-            error={errors.title && true}
-            helperText={errors.title?.message}
-          />
-          <TextField
-            multiline
-            rows={3}
-            variant="filled"
-            label="Description"
-            autoComplete="off"
-            {...register("description")}
-            error={errors.description && true}
-            helperText={errors.description?.message}
-          />
+          <Typography variant="h5">Create a Post</Typography>
 
-          <Container
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              p: "1rem",
-            }}
+          <Box
+            component="form"
+            onSubmit={handleSubmit(onSubmit)}
+            maxWidth="md"
+            sx={{ gap: "2rem", display: "flex", flexDirection: "column" }}
           >
-            {preview ? (
-              <img
-                src={preview}
-                alt="upload preview"
-                style={{
-                  objectFit: "contain",
-                  maxWidth: "100px",
-                  maxHeight: "100px",
-                }}
-              />
-            ) : (
-              <Typography>Image Preview</Typography>
-            )}
-          </Container>
-
-          <label htmlFor="upload-img-button">
-            <input
-              accept="image/*"
-              id="upload-img-button"
-              type="file"
-              style={{ display: "none" }}
-              {...register("image")}
+            <Divider />
+            <TextField
+              variant="outlined"
+              label="Title"
+              autoComplete="off"
+              {...register("title")}
+              error={errors.title && true}
+              helperText={errors.title?.message}
+            />
+            <TextField
+              multiline
+              rows={3}
+              variant="outlined"
+              label="Description"
+              autoComplete="off"
+              {...register("description")}
+              error={errors.description && true}
+              helperText={errors.description?.message}
             />
 
-            {preview === null && (
+            <Container
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                p: "1rem",
+              }}
+            >
+              {preview ? (
+                <img
+                  src={preview}
+                  alt="upload preview"
+                  style={{
+                    objectFit: "contain",
+                    maxWidth: "600px",
+                    maxHeight: "200px",
+                  }}
+                />
+              ) : (
+                <Typography>Image Preview</Typography>
+              )}
+            </Container>
+
+            <label htmlFor="upload-img-button">
+              <input
+                accept="image/*"
+                id="upload-img-button"
+                type="file"
+                style={{ display: "none" }}
+                {...register("image")}
+              />
+
+              {preview === null && (
+                <Button
+                  component="span"
+                  fullWidth
+                  variant="contained"
+                  size="large"
+                  endIcon={<AddAPhotoIcon />}
+                >
+                  Upload
+                </Button>
+              )}
+            </label>
+            {preview && (
               <Button
                 component="span"
                 fullWidth
-                variant="contained"
+                variant="outlined"
                 size="large"
-                endIcon={<AddAPhotoIcon />}
+                endIcon={<NoPhotographyIcon />}
+                onClick={() => setValue("image", {})}
               >
-                Upload
+                Delete
               </Button>
             )}
-          </label>
-          {preview && (
-            <Button
-              component="span"
-              fullWidth
-              variant="outlined"
-              size="large"
-              endIcon={<NoPhotographyIcon />}
-              onClick={() => setValue("image", {})}
-            >
-              Delete
-            </Button>
-          )}
 
-          <Box sx={{ position: "relative" }}>
-            <Button
-              fullWidth
-              type="submit"
-              variant="contained"
-              size="large"
-              disabled={isLoading}
-            >
-              Submit Post
-            </Button>
-            {isLoading && (
-              <CircularProgress
-                size={30}
-                sx={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  marginTop: "-12px",
-                  marginLeft: "-12px",
-                }}
-              />
-            )}
+            <Box sx={{ position: "relative" }}>
+              <Button
+                fullWidth
+                type="submit"
+                variant="contained"
+                size="large"
+                disabled={isLoading}
+              >
+                Submit Post
+              </Button>
+              {isLoading && (
+                <CircularProgress
+                  size={30}
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    marginTop: "-12px",
+                    marginLeft: "-12px",
+                  }}
+                />
+              )}
+            </Box>
           </Box>
-        </Box>
+        </Paper>
       </Modal>
     </>
   );
