@@ -3,12 +3,12 @@ import { Box, TextField, Button, CircularProgress } from "@mui/material";
 import { useUserLoginMutation } from "../store/apiSlice";
 import { useAppDispatch } from "../app/hooks";
 import { useNavigate } from "react-router-dom";
-import { initUser } from "../store/user/userSlice";
 import * as yup from "yup";
 import Alert from "@mui/material/Alert";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginFieldWithUsername } from "../types/types";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { setCredentials } from "../store/auth/authSlice";
 
 function isEmail(str: string): boolean {
   return str.includes("@");
@@ -33,7 +33,9 @@ export default function Login(): ReactElement {
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit: SubmitHandler<loginFieldWithUsername> = (credentials) => {
+  const onSubmit: SubmitHandler<loginFieldWithUsername> = async (
+    credentials
+  ) => {
     setApiError("");
     let copyCredentials: any = { ...credentials };
 
@@ -41,16 +43,16 @@ export default function Login(): ReactElement {
       copyCredentials["email"] = copyCredentials.username;
       delete copyCredentials.username;
     }
-    loginUser(copyCredentials)
-      .unwrap()
-      .then(({ token, user }) => {
-        dispatch(initUser(user));
-        window.localStorage.setItem("token", token);
-        navigate("/home");
-      })
-      .catch(({ data: { error } }) => {
-        setApiError(error);
-      });
+
+    try {
+      const user = await loginUser(copyCredentials).unwrap();
+      dispatch(setCredentials(user));
+      window.localStorage.setItem("token", JSON.stringify(user.token));
+      window.localStorage.setItem("user", JSON.stringify(user.user));
+      navigate("/home");
+    } catch ({ data: { error } }) {
+      setApiError(error as string);
+    }
   };
 
   return (

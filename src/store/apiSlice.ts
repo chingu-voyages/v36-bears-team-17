@@ -7,18 +7,20 @@ import {
   postField,
 } from "../types/types";
 
-export const apiSlice = createApi({
-  reducerPath: "apiCall",
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_BASE_URL,
-    prepareHeaders: (headers) => {
-      if (localStorage.getItem("token")) {
-        headers.set("Authorization", `Bearer ${localStorage.getItem("token")}`);
-      }
+const baseQuery = fetchBaseQuery({
+  baseUrl: process.env.REACT_APP_BASE_URL,
+  prepareHeaders: (headers) => {
+    const token = JSON.parse(localStorage.getItem("token") || "{}");
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
 
-      return headers;
-    },
-  }),
+    return headers;
+  },
+});
+
+export const apiSlice = createApi({
+  baseQuery: baseQuery,
   endpoints: (builder) => ({
     userRegistration: builder.mutation<registerResponse, signupField>({
       query: (userInput) => ({

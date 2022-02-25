@@ -3,12 +3,12 @@ import { Box, TextField, Button, CircularProgress } from "@mui/material";
 import { useUserRegistrationMutation } from "../store/apiSlice";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../app/hooks";
-import { initUser } from "../store/user/userSlice";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { signupField } from "../types/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Alert from "@mui/material/Alert";
+import { setCredentials } from "../store/auth/authSlice";
 
 const signUpSchema = yup.object({
   displayName: yup.string().required("* Required Field"),
@@ -40,19 +40,18 @@ export default function Signup(): ReactElement {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const onSubmit: SubmitHandler<signupField> = (credentials) => {
+  const onSubmit: SubmitHandler<signupField> = async (credentials) => {
     setApiError("");
 
-    registerUser(credentials)
-      .unwrap()
-      .then(({ token, user }) => {
-        dispatch(initUser(user));
-        window.localStorage.setItem("token", token);
-        navigate("/home");
-      })
-      .catch(({ data }) => {
-        setApiError(data.error);
-      });
+    try {
+      const user = await registerUser(credentials).unwrap();
+      dispatch(setCredentials(user));
+      window.localStorage.setItem("token", JSON.stringify(user.token));
+      window.localStorage.setItem("user", JSON.stringify(user.user));
+      navigate("/home");
+    } catch ({ data: { error } }) {
+      setApiError(error as string);
+    }
   };
 
   return (
