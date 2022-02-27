@@ -1,73 +1,54 @@
-import { Box } from "@mui/material";
+import { useEffect } from "react";
+import { Box, CircularProgress } from "@mui/material";
 import PostCard from "./postCard/PostCard";
 import PostForm from "./PostForm";
-
-// Dummy data - Feel free to delete, here to reference what a real post would look like
-const data = [
-  {
-    _id: "61ef08b4b06a1addfba67884h",
-    title: "W",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    tags: [],
-    user: {
-      _id: "61ef047bb06a1addfba632de",
-      displayName: "tester111",
-      username: "tester111",
-    },
-    comments: [],
-    likes: [],
-    createdAt: "2022-01-24T20:14:44.170Z",
-    __v: 0,
-  },
-  {
-    _id: "61ef08b4b06a1addfba632e7",
-    title: "short title",
-    description: "hello description here",
-    tags: [],
-    user: {
-      _id: "61ef047bb06a1addfba632de",
-      displayName: "tester111",
-      username: "tester111",
-    },
-    comments: [],
-    likes: [],
-    createdAt: "2022-01-24T20:14:44.170Z",
-    __v: 0,
-  },
-  {
-    _id: "61ef08b4b06a1addfba6753d",
-    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed id semper risus in hendrerit gravida rutrum. Pharetra vel turpis nunc eget lorem dolor. Tincidunt ornare massa eget egestas purus viverra accumsan in nisl. Purus in mollis nunc sed. Dignissim convallis aenean et tortor at risus viverra. Facilisis sed odio morbi quis commodo odio aenean sed adipiscing. Velit egestas dui id ornare. Metus aliquam eleifend mi in nulla posuere sollicitudin. Dolor sit amet consectetur adipiscing elit ut aliquam purus. Ac felis donec et odio pellentesque diam. Penatibus et magnis dis parturient. Suspendisse ultrices gravida dictum fusce ut placerat orci nulla. Id velit ut tortor pretium viverra suspendisse. Pretium nibh ipsum consequat nisl vel pretium. Ac tortor dignissim convallis aenean et. Enim eu turpis egestas pretium aenean pharetra. Ipsum nunc aliquet bibendum enim facilisis gravida neque convallis a. Sociis natoque penatibus et magnis. Id velit ut tortor pretium viverra suspendisse potenti. Commodo odio aenean sed adipiscing diam donec. Purus in mollis nunc sed id semper. At volutpat diam ut venenatis tellus in metus vulputate eu. A diam maecenas sed enim. Eget nunc scelerisque viverra mauris in aliquam sem fringilla. Sem nulla pharetra diam sit amet nisl suscipit. Nisi est sit amet facilisis magna etiam tempor orci eu. Non pulvinar neque laoreet suspendisse interdum consectetur. Interdum velit euismod in pellentesque massa placerat duis ultricies lacus. Vulputate eu scelerisque felis imperdiet proin fermentum leo vel orci. Turpis egestas integer eget aliquet nibh praesent. Cursus metus aliquam eleifend mi in nulla posuere sollicitudin aliquam. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Diam ut venenatis tellus in metus vulputate. Enim nulla aliquet porttitor lacus luctus accumsan tortor posuere ac. At tempor commodo ullamcorper a lacus vestibulum. Facilisis sed odio morbi quis commodo odio. Aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices. Ut tortor pretium viverra suspendisse. Netus et malesuada fames ac turpis egestas.",
-    tags: [],
-    user: {
-      _id: "61ef047bb06a1addfba632de",
-      displayName: "tester111",
-      username: "tester111",
-    },
-    comments: [],
-    likes: [],
-    createdAt: "2022-01-24T20:14:44.170Z",
-    __v: 0,
-  },
-];
+import { useFetchPostsQuery } from "../store/apiSlice";
 
 export default function Home() {
+  const {
+    data: posts,
+    isLoading,
+    isError,
+    isSuccess,
+    error,
+  } = useFetchPostsQuery();
+
+  let content;
+
+  if (isLoading) {
+    content = (
+      <CircularProgress
+        size={30}
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          marginTop: "-12px",
+          marginLeft: "-12px",
+        }}
+      />
+    );
+  } else if (isSuccess) {
+    content = posts?.data.map((post: any) => (
+      <PostCard key={post._id} post={post} />
+    ));
+  } else if (isError) {
+    content = <Box> Error: {error}</Box>;
+  }
+
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         gap: "1rem",
-        maxWidth: "600px",
+        maxWidth: { xs: "600px" },
+        width: { md: "600px" },
         margin: "0 auto",
       }}
     >
       <PostForm />
-      {data.map((post) => (
-        <PostCard key={post._id} post={post} />
-      ))}
+      {content}
     </Box>
   );
 }

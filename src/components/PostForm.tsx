@@ -33,6 +33,7 @@ export default function PostForm(): ReactElement {
     setValue,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm<postField>({
     resolver: yupResolver(postSchema),
     defaultValues: {
@@ -46,19 +47,12 @@ export default function PostForm(): ReactElement {
   };
   const handleClose = () => {
     setOpen(false);
+    reset();
   };
 
-  const onSubmit: SubmitHandler<postField> = (postData) => {
-    console.log(postData);
-
-    createPost(postData)
-      .then((response) => {
-        console.log(response);
-        handleClose();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const onSubmit: SubmitHandler<postField> = async (postData) => {
+    await createPost(postData);
+    await handleClose();
   };
 
   useEffect(() => {
@@ -87,6 +81,9 @@ export default function PostForm(): ReactElement {
         variant="contained"
         size="large"
         onClick={handleOpen}
+        sx={{
+          borderRadius: { xs: "0", sm: "5px" },
+        }}
       >
         Create Post
       </Button>
