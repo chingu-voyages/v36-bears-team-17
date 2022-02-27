@@ -5,6 +5,7 @@ import {
   loginFieldWithEmail,
   loginFieldWithUsername,
   postField,
+  postObj,
 } from "../types/types";
 
 const baseQuery = fetchBaseQuery({
@@ -21,6 +22,7 @@ const baseQuery = fetchBaseQuery({
 
 export const apiSlice = createApi({
   baseQuery: baseQuery,
+  tagTypes: ["Posts"],
   endpoints: (builder) => ({
     userRegistration: builder.mutation<registerResponse, signupField>({
       query: (userInput) => ({
@@ -39,12 +41,17 @@ export const apiSlice = createApi({
         body: userInput,
       }),
     }),
-    createPost: builder.mutation<any, postField>({
+    createPost: builder.mutation<postObj, postField>({
       query: (postInput) => ({
         url: "api/post/",
         method: "POST",
         body: postInput,
       }),
+      invalidatesTags: ["Posts"],
+    }),
+    fetchPosts: builder.query<{ data: postObj[] }, void>({
+      query: () => "api/post/",
+      providesTags: ["Posts"],
     }),
   }),
 });
@@ -53,4 +60,5 @@ export const {
   useUserRegistrationMutation,
   useUserLoginMutation,
   useCreatePostMutation,
+  useFetchPostsQuery,
 } = apiSlice;
